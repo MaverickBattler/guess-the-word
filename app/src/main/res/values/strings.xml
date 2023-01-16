@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Guess the Word</string>
+    <string name="asterisk">*</string>
+    <string name="guess">Угадать</string>
+    <string name="you_have_lives_left">Попыток осталось: </string>
+    <string name="incorrect_guesses">Неправильные попытки:</string>
+    <string name="play_again">Начать заново</string>
+    <string name="you_have_already_tried_this_letter">Вы уже пробовали эту букву!</string>
+    <string name="enter_english_letter">Введите английскую букву:</string>
+</resources>
