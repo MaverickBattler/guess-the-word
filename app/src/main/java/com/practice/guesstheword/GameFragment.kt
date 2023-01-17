@@ -58,22 +58,23 @@ class GameFragment : Fragment() {
             }
         }
 
+        viewModel.gameOver.observe(viewLifecycleOwner) { newValue ->
+            if (newValue) {
+                // navigate to ResultFragment
+                val action =
+                    GameFragmentDirections.actionGameFragmentToResultFragment(
+                        viewModel.messageToSend()
+                    )
+                view.findNavController().navigate(action)
+            }
+        }
+
         binding.guessButton.setOnClickListener {
             val guess = binding.letterEdittext.text.toString().uppercase()
             if (viewModel.isGuessRepeated(guess) && viewModel.isGuessValid(guess))
                 showRepeatGuessNotice()
-            else if (viewModel.isGuessValid(guess)) {
+            else if (viewModel.isGuessValid(guess))
                 viewModel.makeGuess(guess)
-                // if user has won or lost
-                if (viewModel.userWon() || viewModel.userLost()) {
-                    // navigate to ResultFragment
-                    val action =
-                        GameFragmentDirections.actionGameFragmentToResultFragment(
-                            viewModel.messageToSend()
-                        )
-                    view.findNavController().navigate(action)
-                }
-            }
             binding.letterEdittext.text = null
         }
         return view

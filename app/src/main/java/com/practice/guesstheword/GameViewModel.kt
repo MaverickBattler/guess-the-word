@@ -51,6 +51,11 @@ class GameViewModel : ViewModel() {
     val lives: LiveData<Int>
         get() = _lives
 
+    // when this value is true, the game has finished with either win or loss of the player
+    private val _gameOver = MutableLiveData(false)
+    val gameOver: LiveData<Boolean>
+        get() = _gameOver
+
     init {
         _secretWordDisplayed.value = deriveSecretWordDisplayed()
     }
@@ -83,13 +88,14 @@ class GameViewModel : ViewModel() {
             _incorrectGuesses.value += "$guess "
             _lives.value = lives.value?.minus(1)
         }
+        if (userLost() || userWon()) _gameOver.value = true
     }
 
     // check if the user has won
-    fun userWon() = secretWord.equals(secretWordDisplayed.value, true)
+    private fun userWon() = secretWord.equals(secretWordDisplayed.value, true)
 
     // check if the user has lost
-    fun userLost() = (lives.value ?: 0) <= 0
+    private fun userLost() = (lives.value ?: 0) <= 0
 
     // get the message to send to the result fragment
     fun messageToSend(): String {
