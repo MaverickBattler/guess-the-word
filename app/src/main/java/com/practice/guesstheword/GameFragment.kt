@@ -26,8 +26,37 @@ class GameFragment : Fragment() {
         val view = binding.root
 
         viewModel = ViewModelProvider(this)[GameViewModel::class.java]
-
-        updateScreen()
+        // Set LiveData observers
+        viewModel.incorrectGuesses.observe(viewLifecycleOwner) { newValue ->
+            binding.incorrectGuessesListTextview.text = newValue
+        }
+        viewModel.secretWordDisplayed.observe(viewLifecycleOwner) { newValue ->
+            binding.wordTextview.text = newValue
+        }
+        viewModel.lives.observe(viewLifecycleOwner) { newValue ->
+            binding.livesAmountTextview.text = newValue.toString()
+            // Set the lives amount textview color based on the amount left
+            when (newValue) {
+                in 6..8 -> binding.livesAmountTextview.setTextColor(
+                    ContextCompat.getColor(
+                        binding.livesAmountTextview.context,
+                        R.color.green
+                    )
+                )
+                in 3..5 -> binding.livesAmountTextview.setTextColor(
+                    ContextCompat.getColor(
+                        binding.livesAmountTextview.context,
+                        R.color.yellow
+                    )
+                )
+                else -> binding.livesAmountTextview.setTextColor(
+                    ContextCompat.getColor(
+                        binding.livesAmountTextview.context,
+                        R.color.red
+                    )
+                )
+            }
+        }
 
         binding.guessButton.setOnClickListener {
             val guess = binding.letterEdittext.text.toString().uppercase()
@@ -35,7 +64,6 @@ class GameFragment : Fragment() {
                 showRepeatGuessNotice()
             else if (viewModel.isGuessValid(guess)) {
                 viewModel.makeGuess(guess)
-                updateScreen()
                 // if user has won or lost
                 if (viewModel.userWon() || viewModel.userLost()) {
                     // navigate to ResultFragment
@@ -54,41 +82,6 @@ class GameFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    // update the text on screen
-    private fun updateScreen() {
-        binding.wordTextview.text = viewModel.secretWordDisplayed
-        binding.livesTextview.text = getString(R.string.you_have_lives_left)
-        binding.livesAmountTextview.text = viewModel.lives.toString()
-        binding.incorrectGuessesTextview.text =
-            getString(R.string.incorrect_guesses)
-        binding.incorrectGuessesListTextview.text = viewModel.incorrectGuesses
-        setLivesAmountColor()
-    }
-
-    // Set the lives amount textview color based on the amount left
-    private fun setLivesAmountColor() {
-        when (viewModel.lives) {
-            in 6..8 -> binding.livesAmountTextview.setTextColor(
-                ContextCompat.getColor(
-                    binding.livesAmountTextview.context,
-                    R.color.green
-                )
-            )
-            in 3..5 -> binding.livesAmountTextview.setTextColor(
-                ContextCompat.getColor(
-                    binding.livesAmountTextview.context,
-                    R.color.yellow
-                )
-            )
-            else -> binding.livesAmountTextview.setTextColor(
-                ContextCompat.getColor(
-                    binding.livesAmountTextview.context,
-                    R.color.red
-                )
-            )
-        }
     }
 
     // Show a toast with the info that the guess is a repeat of a previous guess

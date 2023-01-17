@@ -1,5 +1,6 @@
 package com.practice.guesstheword
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
@@ -32,19 +33,19 @@ class GameViewModel : ViewModel() {
     private val secretWord = words.random().uppercase()
 
     // the word displayed to user during the game
-    var secretWordDisplayed = ""
+    val secretWordDisplayed = MutableLiveData<String>()
 
     // string with all correct guesses
     private var correctGuesses = ""
 
     // string with all incorrect guesses displayed to user
-    var incorrectGuesses = ""
+    val incorrectGuesses = MutableLiveData("")
 
     // amount of lives left
-    var lives = 8
+    val lives = MutableLiveData(8)
 
     init {
-        secretWordDisplayed = deriveSecretWordDisplayed()
+        secretWordDisplayed.value = deriveSecretWordDisplayed()
     }
 
     // get the current display of the secret word
@@ -68,20 +69,20 @@ class GameViewModel : ViewModel() {
             // if the user guessed right, update the
             // displayed word and the list of correct guesses
             correctGuesses += guess
-            secretWordDisplayed = deriveSecretWordDisplayed()
+            secretWordDisplayed.value = deriveSecretWordDisplayed()
         } else {
             // if the user guessed wrong, update the list of
             // incorrect guesses and decrease the number of lives
-            incorrectGuesses += "$guess "
-            lives--
+            incorrectGuesses.value += "$guess "
+            lives.value = lives.value?.minus(1)
         }
     }
 
     // check if the user has won
-    fun userWon() = secretWord.equals(secretWordDisplayed, true)
+    fun userWon() = secretWord.equals(secretWordDisplayed.value, true)
 
     // check if the user has lost
-    fun userLost() = lives <= 0
+    fun userLost() = (lives.value ?: 0) <= 0
 
     // get the message to send to the result fragment
     fun messageToSend(): String {
@@ -93,7 +94,7 @@ class GameViewModel : ViewModel() {
     }
 
     // check if the guess is a repeat of a previous guess
-    fun isGuessRepeated(guess: String) = (incorrectGuesses.contains(guess)
+    fun isGuessRepeated(guess: String) = ((incorrectGuesses.value?.contains(guess) ?: false)
             || correctGuesses.contains(guess))
 
     // check if the guess is valid
