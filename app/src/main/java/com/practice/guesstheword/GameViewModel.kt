@@ -1,5 +1,6 @@
 package com.practice.guesstheword
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -33,19 +34,25 @@ class GameViewModel : ViewModel() {
     private val secretWord = words.random().uppercase()
 
     // the word displayed to user during the game
-    val secretWordDisplayed = MutableLiveData<String>()
+    private val _secretWordDisplayed = MutableLiveData<String>()
+    val secretWordDisplayed: LiveData<String>
+        get() = _secretWordDisplayed
 
     // string with all correct guesses
     private var correctGuesses = ""
 
     // string with all incorrect guesses displayed to user
-    val incorrectGuesses = MutableLiveData("")
+    private val _incorrectGuesses = MutableLiveData("")
+    val incorrectGuesses: LiveData<String>
+        get() = _incorrectGuesses
 
     // amount of lives left
-    val lives = MutableLiveData(8)
+    private val _lives = MutableLiveData(8)
+    val lives: LiveData<Int>
+        get() = _lives
 
     init {
-        secretWordDisplayed.value = deriveSecretWordDisplayed()
+        _secretWordDisplayed.value = deriveSecretWordDisplayed()
     }
 
     // get the current display of the secret word
@@ -69,12 +76,12 @@ class GameViewModel : ViewModel() {
             // if the user guessed right, update the
             // displayed word and the list of correct guesses
             correctGuesses += guess
-            secretWordDisplayed.value = deriveSecretWordDisplayed()
+            _secretWordDisplayed.value = deriveSecretWordDisplayed()
         } else {
             // if the user guessed wrong, update the list of
             // incorrect guesses and decrease the number of lives
-            incorrectGuesses.value += "$guess "
-            lives.value = lives.value?.minus(1)
+            _incorrectGuesses.value += "$guess "
+            _lives.value = lives.value?.minus(1)
         }
     }
 
