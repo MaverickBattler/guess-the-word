@@ -71,10 +71,10 @@ class GameFragment : Fragment() {
 
         binding.guessButton.setOnClickListener {
             val guess = binding.letterEdittext.text.toString().uppercase()
-            if (viewModel.isGuessRepeated(guess) && viewModel.isGuessValid(guess))
-                showRepeatGuessNotice()
-            else if (viewModel.isGuessValid(guess))
+            if (viewModel.isGuessValid(guess) && !viewModel.isGuessRepeated(guess))
                 viewModel.makeGuess(guess)
+            else if (viewModel.isGuessValid(guess))
+                showRepeatGuessNotice()
             binding.letterEdittext.text = null
         }
         return view
