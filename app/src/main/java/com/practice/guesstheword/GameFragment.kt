@@ -26,15 +26,12 @@ class GameFragment : Fragment() {
         val view = binding.root
 
         viewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        // Set the data binding variable
+        binding.gameViewModel = viewModel
+        // Let the layout respond to the live data updates
+        binding.lifecycleOwner = viewLifecycleOwner
         // Set LiveData observers
-        viewModel.incorrectGuesses.observe(viewLifecycleOwner) { newValue ->
-            binding.incorrectGuessesListTextview.text = newValue
-        }
-        viewModel.secretWordDisplayed.observe(viewLifecycleOwner) { newValue ->
-            binding.wordTextview.text = newValue
-        }
         viewModel.lives.observe(viewLifecycleOwner) { newValue ->
-            binding.livesAmountTextview.text = newValue.toString()
             // Set the lives amount textview color based on the amount left
             when (newValue) {
                 in 6..8 -> binding.livesAmountTextview.setTextColor(
@@ -57,7 +54,6 @@ class GameFragment : Fragment() {
                 )
             }
         }
-
         viewModel.gameOver.observe(viewLifecycleOwner) { newValue ->
             if (newValue) {
                 // navigate to ResultFragment

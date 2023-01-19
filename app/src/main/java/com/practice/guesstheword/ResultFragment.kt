@@ -26,7 +26,7 @@ class ResultFragment : Fragment() {
         val result = ResultFragmentArgs.fromBundle(requireArguments()).result
         viewModelFactory = ResultViewModelFactory(result)
         viewModel = ViewModelProvider(this, viewModelFactory)[ResultViewModel::class.java]
-        binding.gameResultTextview.text = viewModel.finalResult
+        binding.resultViewModel = viewModel
 
         binding.startNewGameButton.setOnClickListener {
             view.findNavController().navigate(R.id.action_result_fragment_to_game_fragment)
