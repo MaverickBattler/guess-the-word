@@ -70,7 +70,7 @@ class GameFragment : Fragment() {
             if (viewModel.isGuessValid(guess) && !viewModel.isGuessRepeated(guess))
                 viewModel.makeGuess(guess)
             else if (viewModel.isGuessValid(guess))
-                showRepeatGuessNotice()
+                showRepeatingGuessNotification()
             binding.letterEdittext.text = null
         }
         return view
@@ -82,7 +82,7 @@ class GameFragment : Fragment() {
     }
 
     // Show a toast with the info that the guess is a repeat of a previous guess
-    private fun showRepeatGuessNotice() {
+    private fun showRepeatingGuessNotification() {
         Toast.makeText(activity, R.string.you_have_already_tried_this_letter, Toast.LENGTH_SHORT)
             .show()
     }
