@@ -80,6 +80,13 @@
             android:id="@+id/guess_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="@string/guess"/>
+        <Button
+            android:id="@+id/finish_game_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/see_the_answer"
+            android:onClick="@{() -> gameViewModel.finishGame()}"/>
     </LinearLayout>
 </layout>

@@ -100,9 +100,9 @@ class GameViewModel : ViewModel() {
     // get the message to send to the result fragment
     fun messageToSend(): String {
         var message = ""
-        if (userWon()) message = "Вы победили!"
-        else if (userLost()) message = "Вы проиграли!"
-        message += " Загаданное слово было $secretWord."
+        if (userWon()) message = "Вы победили! "
+        else if (userLost()) message = "Вы проиграли! "
+        message += "Загаданное слово было $secretWord."
         return message
     }
 
@@ -112,4 +112,9 @@ class GameViewModel : ViewModel() {
 
     // check if the guess is valid
     fun isGuessValid(guess: String) = guess.length == 1 && guess in "A".."Z"
+
+    // finish the game without guessing
+    fun finishGame() {
+        _gameOver.value = true
+    }
 }
